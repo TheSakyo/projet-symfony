@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Article - {{ article.getTitle }}{% endblock %}
+
+{% block body %}
+
+<main class="pt-8 pb-16 lg:pt-16 lg:pb-24">
+  <div class="flex justify-between px-4 mx-auto max-w-screen-xl ">
+      <article class="mx-auto w-full max-w-2xl format format-sm sm:format-base lg:format-lg format-blue">
+          <header class="mb-4 lg:mb-6 not-format">
+              <address class="flex items-center mb-6 not-italic">
+                  <div class="inline-flex items-center mr-3 text-sm text-gray-900">
+                      <div>
+                          <p rel="author" class="text-xl font-bold text-gray-900">{{ article.getUser.getName }}</p>
+                          <p class="text-base font-light text-gray-500"><time pubdate>{{ article.getDate|date('d/m/Y à H:i') }}</time></p>
+                      </div>
+                  </div>
+              </address>
+              <h1 class="mb-4 text-3xl font-extrabold leading-tight text-gray-900 lg:mb-6 lg:text-4xl">▷ {{ article.getTitle }}</h1>
+          </header>
+          {% if app.user and app.user == article.getUser %}
+            <section>
+                <div class="flex justify-right gap-4 w-full">             
+                    <a href="update_{{ article.getId }}">
+                        <button type="button" class="focus:outline-none text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm p-1.5 mr-2 mb-2">Modifier</button>
+                    </a>
+                    <a href="delete_{{ article.id }}?token={{ csrf_token('delete' ~ article.id) }}" onclick="alert('Êtes-vous sûr de vouloir supprimer cet article ?');">
+                        <button type="button" class="focus:outline-none text-white bg-red-400 hover:bg-red-500 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm p-1.5 mr-2 mb-2">Supprimer</button>
+                    </a>
+                </div>
+            <section>
+          {% endif %}
+          <section class="my-12">
+            {{ article.getContent }}
+          </section>
+      </article>
+  </div>
+</main>
+{% endblock %}
