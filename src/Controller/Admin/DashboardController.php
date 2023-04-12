@@ -20,7 +20,8 @@ class DashboardController extends AbstractDashboardController {
         $adminUrlGenerator = $this->container->get(AdminUrlGenerator::class);
         return $this->redirect($adminUrlGenerator->setController(UserCrudController::class)->generateUrl());
     }
-
+            /* ----------------------------------------------------- */
+    
     public function configureDashboard(): Dashboard {
 
         return Dashboard::new()
@@ -30,7 +31,8 @@ class DashboardController extends AbstractDashboardController {
             ->disableUrlSignatures()
             ->generateRelativeUrls();
     }
-
+            /* ----------------------------------------------------- */
+    
     public function configureMenuItems(): iterable  {
 
         return [
