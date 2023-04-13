@@ -5,8 +5,11 @@ namespace App\Entity;
 use App\Repository\ArticleRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
+#[Vich\Uploadable]
 class Article {
 
     /* ------------------------------------------------- */
@@ -34,6 +37,19 @@ class Article {
     private ?string $content = null;
 
     /**
+     * @var ?string Le nom de l'image associé à l'article
+     */
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $image = null;
+
+    /**
+     * @var File|null Le fichier de l'image associé à l'article
+     */
+    #[Vich\UploadableField(mapping: "article_img", fileNameProperty: "image")]
+    private $imageFile = null;
+
+
+    /**
      * @var ?\DateTimeImmutable La dâte de l'articlé
      */
     #[ORM\Column]
@@ -45,6 +61,7 @@ class Article {
     #[ORM\ManyToOne(inversedBy: 'articles')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
+
 
     /* ----------------------------------------------- */
     /* ------------------- GETTERS ------------------- */
@@ -70,6 +87,20 @@ class Article {
      * @return ?string Une chaîne de caractère stockant le contenu de l'article
      */
     public function getContent(): ?string { return $this->content; }
+
+    /** 
+     * Retourne le nom de l'image associé à l'article.
+     * 
+     * @return ?string Une chaîne de caractère stockant le nom de l'image de l'article
+     */
+    public function getImage(): ?string { return $this->image; }
+
+    /** 
+     * Retourne le fichier de l'image associé à l'article.
+     * 
+     * @return ?File Une chaîne de caractère stockant le fichier de l'image de l'article
+     */
+    public function getImageFile(): ?File { return $this->imageFile; }
 
     /** 
      * Retourne la dâte associé à l'article.
@@ -113,6 +144,32 @@ class Article {
     public function setContent(string $content): self {
 
         $this->content = $content;
+        return $this;
+    }
+
+    /**
+     * Définit le nom de l'image de l'article.
+     * 
+     * @param ?string Le nom de l'image en question à donnée à l'article.
+     * 
+     * @return self L'Article en question.
+     */
+    public function setImage(?string $image): self {
+        
+        $this->image = $image;
+        return $this;
+    }
+
+    /**
+     * Définit le fichier de l'image de l'article.
+     * 
+     * @param ?File Le fichier de l'image en question à donnée à l'article.
+     * 
+     * @return self L'Article en question.
+     */
+    public function setImageFile(?File $imageFile = null): self {
+
+        $this->imageFile = $imageFile;
         return $this;
     }
 

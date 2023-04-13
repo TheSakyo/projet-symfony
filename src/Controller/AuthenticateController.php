@@ -32,9 +32,8 @@ class AuthenticateController extends MainController {
 
     #[Route(path: '/login', name: 'login_user')]
     public function login(Request $request, AuthenticationUtils $authenticationUtils): Response {
-            
-        $form = $this->createForm(LoginFormType::class);
-        $form->handleRequest($request);  
+
+        $form = $this->form($request, LoginFormType::class);
 
             /* ----------------------------------------------------------- */
 
@@ -61,10 +60,11 @@ class AuthenticateController extends MainController {
                     return $this->redirectToRoute('login_user');
                 }
             
-                // Connecte l'utilisateur 
-                $token = new UsernamePasswordToken($user, 'main', $user->getRoles());
+                // ⬇️ Connecte l'utilisateur ⬇️ //
+                $token = new UsernamePasswordToken($user, 'main', $user->getRoles()); 
                 $this->tokenStorage->setToken($token);
                 $this->session->set('_security_main', serialize($token));   
+                // ⬆️ Connecte l'utilisateur ⬆️ // 
 
                                     /* --------------------------- */
 
@@ -87,24 +87,15 @@ class AuthenticateController extends MainController {
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher): Response {
         
         $user = new User();
-        $form = $this->createForm(RegistrationFormType::class, $user);
-        $form->handleRequest($request);
-        
+        $form = $this->form($request, RegistrationFormType::class, $user);
+
             /* ----------------------------------------------------------- */
 
         if($form->isSubmitted()) {
 
             if($form->isValid()) {
 
-                $email = $form->get('email')->getData();
-                $name = $form->get('name')->getData();
-                $password = $form->get('password')->getData();
-                
-                                        /* ------------------------ */
-                                        
-                $user->setEmail($email); // Définit l'adresse mail de l'utilisateur
-                $user->setName($name); // Définit le nom de l'utilisateur
-                $user->setPassword($userPasswordHasher->hashPassword($user, $password)); // Crypte le mot de passe pour l'utilisateur
+                $user->setPassword($userPasswordHasher->hashPassword($user, $user->getPassword())); // Crypte le mot de passe pour l'utilisateur
                 $user->setRoles(["ROLE_USER"]); // Ajoute le rôle par défaut de l'utilisateur
                 
                                 /* ------------------------------------------- */

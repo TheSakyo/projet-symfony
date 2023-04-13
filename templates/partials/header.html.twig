@@ -10,27 +10,29 @@
                     <path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path>
                 </svg>
             </button>
-            <div class="hidden w-full md:block md:w-auto" id="navbar-default">
-                <ul class="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:flex-row md:space-x-8 md:mt-0 md:border-0">
+            {% if navbar is defined %}
+                <div class="hidden w-full md:block md:w-auto" id="navbar-default">
+                    <ul class="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:flex-row md:space-x-8 md:mt-0 md:border-0">
                     
-                    {% for item in navbar %}
+                        {% for item in navbar %}
 
-                        <li>
-                            {% if app.request.attributes.get('_route') == item.path %}
-    
-                                <a class="cursor-not-allowed block py-2 pl-3 pr-4 text-white bg-blue-400 rounded md:bg-transparent md:text-blue-400 md:p-0" aria-current="page">{{ item.label }}</a>
-                                
-                            {% else %}    
+                            <li>
+                                {% if app.request.attributes.get('_route') == item.path %}
+        
+                                    <a class="cursor-not-allowed block py-2 pl-3 pr-4 text-white bg-blue-400 rounded md:bg-transparent md:text-blue-400 md:p-0" aria-current="page">{{ item.label }}</a>
+                                    
+                                {% else %}    
 
-                                <a href="{{ item.url }}" class="block py-2 pl-3 pr-4 text-gray-200 rounded hover:bg-blue-400 md:hover:bg-transparent md:border-0 md:hover:text-blue-400 md:p-0">{{ item.label }}</a>
-                                
-                            {% endif %}
-                        </li>
+                                    <a href="{{ item.url }}" class="block py-2 pl-3 pr-4 text-gray-200 rounded hover:bg-blue-400 md:hover:bg-transparent md:border-0 md:hover:text-blue-400 md:p-0">{{ item.label }}</a>
+                                    
+                                {% endif %}
+                            </li>
 
-                    {% endfor %}
+                        {% endfor %}
 
-                </ul>
-            </div>
+                    </ul>
+                </div>
+            {% endif %}
             <div class="block w-auto">
                 <ul class="font-medium flex flex-col p-4 md:p-0 gap-2 rounded-lg md:flex-row md:space-x-8 md:mt-0">
                     

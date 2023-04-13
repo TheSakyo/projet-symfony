@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Form\Entity\ArticleFormType;
 use App\Repository\ArticleRepository;
 use DateTimeImmutable;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -59,7 +60,7 @@ class ArticleController extends MainController {
     
             /* ---------------------------------------- */
             
-    #[Route('/add', name: 'formAdd_article')]
+    #[Route('/add', name: 'formAdd_article' )]
     public function add(Request $request): Response {
         
         /** @var ?User */    
@@ -68,8 +69,7 @@ class ArticleController extends MainController {
 
             /* ----------------------------------------------------------- */
 
-        $form = $this->createForm(ArticleFormType::class, $article);
-        $form->handleRequest($request);
+        $form = $this->form($request, ArticleFormType::class, $article);
 
             /* ----------------------------------------------------------- */
         
@@ -82,19 +82,17 @@ class ArticleController extends MainController {
 
             if($form->isValid()) {
 
-                $title = $form->get('title')->getData();
-                $content = $form->get('content')->getData();
+                /** @var ?UploadedFile */    
+                $image = $article->getImageFile();
 
-                                    /* --------------------------- */
+                if($image != null) { $article->setImage($image->getClientOriginalName()); }
 
-                $article->setTitle($title);
-                $article->setContent($content);
                 $article->setUser($user);
                 $article->setDate(new DateTimeImmutable());
+
+                             /* ------------------------------------------- */
+
                 $this->articleRepository->save($article, true);
-
-                                    /* --------------------------- */
-
                 $user->addArticle($article);
 
                                     /* --------------------------- */
@@ -122,8 +120,7 @@ class ArticleController extends MainController {
 
             /* ----------------------------------------------------------- */
 
-        $form = $this->createForm(ArticleFormType::class, $article);
-        $form->handleRequest($request);
+        $form = $this->form($request, ArticleFormType::class, $article);
 
             /* ----------------------------------------------------------- */
         
@@ -135,15 +132,14 @@ class ArticleController extends MainController {
         if($form->isSubmitted()) {
 
             if($form->isValid()) {
-                                    /* --------------------------- */
 
-                $title = $form->get('title')->getData();
-                $content = $form->get('content')->getData();
+                 /** @var ?UploadedFile */  
+                $image = $article->getImageFile();
 
-                                    /* --------------------------- */
+                if($image != null) { $article->setImage($image->getClientOriginalName()); }  
 
-                $article->setTitle($title);
-                $article->setContent($content);
+                                /* ------------------------------------------- */
+              
                 $this->articleRepository->save($article, true);
 
                                     /* --------------------------- */

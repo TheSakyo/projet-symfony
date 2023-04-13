@@ -11,6 +11,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
+use Vich\UploaderBundle\Form\Type\VichFileType;
 
 class ArticleFormType extends AbstractType {
 
@@ -18,7 +19,6 @@ class ArticleFormType extends AbstractType {
         
         $builder->add('title', TextType::class, [
 
-            'mapped' => false,
             'constraints' => [ new NotBlank(), new NotNull() ]
         ]);
 
@@ -26,8 +26,17 @@ class ArticleFormType extends AbstractType {
 
         $builder->add('content', TextareaType::class, [
 
-            'mapped' => false,
             'constraints' => [ new NotBlank(), new NotNull() ]
+        ]);
+
+                        /* -------------------------------- */
+
+        $builder->add('imageFile', VichFileType::class, [
+
+            'required' => false,
+            'allow_delete' => true,
+            'asset_helper' => true
+
         ]);
     }
                         /* -------------------------------------------------------- */
