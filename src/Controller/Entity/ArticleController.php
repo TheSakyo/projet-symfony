@@ -4,9 +4,12 @@ namespace App\Controller\Entity;
 
 use App\Controller\MainController;
 use App\Entity\Article;
+use App\Entity\Comment;
 use App\Entity\User;
 use App\Form\Entity\ArticleFormType;
+use App\Form\Entity\CommentFormType;
 use App\Repository\ArticleRepository;
+use App\Repository\CommentRepository;
 use DateTimeImmutable;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -23,11 +26,20 @@ class ArticleController extends MainController {
     public function __construct(ArticleRepository $articleRepository) { $this->articleRepository = $articleRepository; }
     
                     /* ----------------------------------------------------------------------- */
-    
     #[Route('/info_{id}', name: 'article_info')]
     public function info(Request $request, Article $article): Response {    
 
-        if($this->isCsrfTokenValid('info'.$article->getId(), $request->query->get('token'))) { $parameters['article'] = $article; }
+        $comment = new Comment();
+       $form = $this->form($request, CommentFormType::class, $comment);
+
+                            /* --------------------------------------------------- */
+
+        $parameters['comments'] = $article->getComments();
+
+                                    /* -------------------------------- */
+
+        $parameters['form'] = $form->createView();             
+        $parameters['article'] = $article;
         return $this->index('entities/article/info.html.twig', $parameters);
     }
     

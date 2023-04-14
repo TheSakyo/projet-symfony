@@ -1,0 +1,39 @@
+<section class="bg-white py-8 lg:py-16 w-full">
+    <div class="max-w-2xl mx-auto px-4">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-lg lg:text-2xl font-bold text-gray-900">Commentaire</h2>
+        </div>
+        {{ form_start(form) }}
+            <div class="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200">
+                {{ form_label(form.content, 'Votre Commentaire', {'attr': {'for' : 'comment', 'class': 'sr-only'}}) }}
+                {{ form_widget(form.content, {'attr': {'id' : 'comment', 'rows': '3', 'class': 'px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none', 'placeholder': 'Écrivez un commentaire...', 'required': 'required'}}) }}
+            </div>  
+            <div class="flex justify-end w-full">
+                <input type="submit" class="cursor-pointer inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 hover:bg-blue-800" value="Postez votre commentaire">
+            </div>
+        {{ form_end(form) }}
+        <section class="p-6 my-6 text-base bg-slate-10 0 rounded-lg w-full shadow">
+            <div class="flex justify-between items-center mb-2 w-full">
+                <div class="flex items-center">
+                    <p class="inline-flex items-center mr-3 text-sm text-gray-900">Dydy</p>
+                    <p> - </p>
+                    <p class="mx-2 text-sm text-gray-600">
+                        <time>xxx/xxx/xxx</time>
+                    </p>
+                </div>
+                <div>
+                    <div class="flex py-1 text-sm text-white">
+                        <div>
+                            <a href="#" class="shadow py-2 px-4 mx-2 rounded bg-yellow-400 hover:bg-yellow-600">Modifier</a>
+                        </div>
+                        <div>
+                            <a href="#" class="shadow py-2 px-4 mx-2 rounded bg-red-400 hover:bg-red-600">Supprimer</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p class="text-slate-500">Chibro Toto & Stifane</p>
+        </section>
+    </div>
+    </section>
+</section> 
