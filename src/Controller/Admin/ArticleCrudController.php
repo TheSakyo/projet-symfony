@@ -4,14 +4,15 @@ namespace App\Controller\Admin;
 
 use App\Entity\Article;
 use App\Entity\User;
-use App\Repository\UserRepository;
 use DateTimeImmutable;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class ArticleCrudController extends AbstractCrudController {
     
@@ -32,6 +33,8 @@ class ArticleCrudController extends AbstractCrudController {
                 'class' => User::class,
                 'choice_label' => 'name'
             ]),
+            Field::new('imageFile', 'Image')->setFormType(VichImageType::class)->hideOnIndex(),
+            ImageField::new('image', 'Image')->setBasePath('images/articles/')->hideOnForm(),
             DateTimeField::new('date')->hideOnForm() // Champ qui sera visible sauf pour le formulaire
         ];
     }

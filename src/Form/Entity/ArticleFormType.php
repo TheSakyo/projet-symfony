@@ -11,7 +11,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
-use Vich\UploaderBundle\Form\Type\VichFileType;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class ArticleFormType extends AbstractType {
 
@@ -31,10 +31,11 @@ class ArticleFormType extends AbstractType {
 
                         /* -------------------------------- */
 
-        $builder->add('imageFile', VichFileType::class, [
-
+        $builder->add('imageFile', VichImageType::class, [
+            
             'required' => false,
-            'allow_delete' => true,
+            'allow_delete' => false,
+            'download_uri' => false,
             'asset_helper' => true
 
         ]);

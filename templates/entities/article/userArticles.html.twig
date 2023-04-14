@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Vos Articles{% endblock %}
+
+{% block body %}
+
+<div class="flex justify-center w-full">
+    <div class="w-11/12 my-12">
+        {% if error is defined %}
+            <div class="flex flex-col items-center bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                <strong class="font-bold">Vous n'êtes pas connecté !</strong>
+                <span class="block sm:inline">{{ error }}</span>
+            </div>
+        {% else %}
+            <h1 class="flex items-center text-5xl font-extrabold underline">Vos Articles :</h1>
+
+            <div class="w-full my-12 text-center">
+                <a href="add">
+                <button type="button" class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2">Ajouter un article</button>
+                </a>
+            </div>
+
+            {% if articles is empty %}
+                <div class="flex flex-col items-center bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 my-8 rounded relative" role="alert">
+                    <strong class="font-bold">Aucun Articles !</strong>
+                    <span class="block sm:inline">Vous possédez aucun articles..</span>
+                </div>
+            {% endif %}
+
+            <div class="flex justify-around flex-wrap items-center w-full">
+                {% for article in articles %}
+                    <div class="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow p-8 rounded-md">
+                        <h2 class="mb-2 text-2xl font-bold underline tracking-tight text-gray-900 mb-4">{{ article.getTitle }}</h2>
+                        <p>Créer le <span class="text-xs font-bold">{{ article.getDate|date('d/m/Y à H:i') }}</span></p>
+                        <hr class="my-4"/>     
+                        <div class="flex justify-center gap-4 w-full">
+                            <a href="info_{{ article.id }}?token={{ csrf_token('info' ~ article.id) }}">
+                                <button type="button" class="focus:outline-none text-white bg-slate-400 hover:bg-slate-500 focus:ring-4 focus:ring-slate-300 font-medium rounded-lg text-sm p-2 mr-2 mb-2">En savoir plus...</button>
+                            </a>
+                        </div>
+                    </div>  
+                {% endfor %}
+            </div>
+
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

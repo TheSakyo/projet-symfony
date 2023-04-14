@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Form\Entity\ArticleFormType;
 use App\Repository\ArticleRepository;
 use DateTimeImmutable;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,15 +34,27 @@ class ArticleController extends MainController {
                     /* ----------------------------------------------------------------------- */
 
     #[Route('/', name: 'articles_list')]
-    public function showAll(): Response {
+    public function showAll(Request $request, PaginatorInterface $paginator): Response {
+        
+        $parameters['route'] = 'articles_list';
+        $parameters['query'] = $this->articleRepository->findBy([], ['date' => 'DESC']);
 
-        $parameters['articles'] = $this->articleRepository->findBy([], ['date' => 'DESC']);
-        return $this->index('entities/article/all.html.twig', $parameters);
+                            /* --------------------------------------------------- */
+
+        $pagination = $paginator->paginate($parameters['query'], $request->query->getInt('page', 1), 25);
+
+                    /* --------------------------------------------------- */
+
+        $parameters['total'] = $pagination->getTotalItemCount();
+        $parameters['articles'] = $pagination;
+
+
+        return $this->index('entities/article/index.html.twig', $parameters);
     }
 
             /* ---------------------------------------- */
             
-    #[Route('/yourArtices', name: 'articles_user')]
+    #[Route('/yourArticles', name: 'articles_user')]
     public function show(): Response {
 
         /** @var ?UserInterface */      
@@ -55,7 +68,7 @@ class ArticleController extends MainController {
 
                         /* --------------------------------------- */
 
-        return $this->index('entities/article/index.html.twig', $parameters);
+        return $this->index('entities/article/userArticles.html.twig', $parameters);
     }
     
             /* ---------------------------------------- */
@@ -164,6 +177,7 @@ class ArticleController extends MainController {
         if($this->isCsrfTokenValid('delete'.$article->getId(), $request->query->get('token'))) { $this->articleRepository->remove($article, true); }
         return $this->redirectToRoute('articles_user');
     }
+
 
             /* ---------------------------------------- */
             /* ---------------------------------------- */
