@@ -14,14 +14,13 @@ use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/article')]
 class ArticleController extends MainController {
     
     private $articleRepository;
-    public function __construct(SessionInterface $session, ArticleRepository $articleRepository) { $this->articleRepository = $articleRepository; }
+    public function __construct(ArticleRepository $articleRepository) { $this->articleRepository = $articleRepository; }
     
                     /* ----------------------------------------------------------------------- */
                     /* ----------------------------------------------------------------------- */

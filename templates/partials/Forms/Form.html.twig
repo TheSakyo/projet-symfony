@@ -29,8 +29,6 @@
         {% endif %}
 
     {% endfor %}
-
-    {% if isLogging is defined %} <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}"/> {% endif %}
     
     <div class="flex justify-center w-full">
         <input type="submit" class="cursor-pointer text-white bg-{{ button_color }}-700 hover:bg-{{ button_color }}-800 focus:ring-4 focus:outline-none focus:ring-{{ button_color }}-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center" value="{{ button_label }}"/>
