@@ -22,34 +22,8 @@
             </a>
         </div>
 
-        <div class="flex flex-col justify-around flex-wrap items-center my-12 w-full">
-            
-            {{ include('entities/article/partials/nav.html.twig') }}
-
-            <div class="flex justify-around flex-wrap gap-12 items-center my-12 w-full">
-                {% for article in articles %}
-                    <div class="flex flex-col gap-12">
-                        <div class="w-96 p-6 bg-gray-200 border border-gray-200 rounded-lg shadow p-8 rounded-xl shadow-lg shadow-gray-500/50">
-                            <h2 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 mb-8">{{ article.getTitle }}</h2>
-                            <div class="flex justify-center"> 
-                                <img class="font-bold text-2xl flex flex-col justify-center items-center text-center w-11/12 h-96 bg-gray-500 bg-white outline outline-offset-3 outline-black border-[12px] border-white shadow-lg shadow-gray-500/50 rounded-lg" src="{{ vich_uploader_asset(article, 'imageFile') }}" alt="Aucune Image"/>
-                            </div>
-                            <hr class="border border-black border-1 mt-8"/>   
-                            <p class="mt-2">Créer le <span class="text-xs font-bold">{{ article.getDate|date('d/m/Y à H:i') }}</span></p>
-                            <p>par <span class="text-xs font-bold">{{ article.getUser.getName }}</span></p>   
-                            <div class="flex justify-center gap-4 mt-4 w-full">
-                                <a href="info_{{ article.id }}">
-                                    <button type="button" class="focus:outline-none text-white bg-slate-400 hover:bg-slate-500 focus:ring-4 focus:ring-slate-300 font-medium rounded-lg text-sm p-2 mr-2 mb-2">En savoir plus...</button>
-                                </a>
-                            </div>
-                        </div>  
-                    </div>
-                {% endfor %}
-            </div>
-
-            {{ include('entities/article/partials/nav.html.twig') }}
-
-        </div>
+        {{ include('entities/article/includes/list.html.twig') }}
+        
     </div>
 </div>
 {% endblock %}

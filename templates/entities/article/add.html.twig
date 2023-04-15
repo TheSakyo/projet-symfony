@@ -7,33 +7,8 @@
 <div class="w-full flex justify-center">
     <div class="w-11/12">
         <h1 class="h3 mb-3 font-weight-normal text-center font-bold underline my-8">Ajout d'article :</h1>
-        {{ form_start(form, {'attr': {'enctype': 'multipart/form-data', 'class': 'bg-gray-300 p-12 rounded-md'}}) }}
-            {% if errorsForm is defined %}
-                {% for error in errorsForm %}
-                    <div class="flex justify-center items-center my-2 w-full">
-                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative w-1/2" role="alert">
-                            <strong class="font-bold">Erreur : </strong>
-                            <span class="block sm:inline">{{ error }}</span>
-                        </div>
-                    </div>
-                {% endfor %}
-            {% endif %}
-            <div class="mb-6">
-                {{ form_label(form.title, 'Titre de l\'article :', {'label_attr': {'class': 'block mb-2 text-sm underline font-medium text-gray-900'}}) }}
-                {{ form_widget(form.title, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5', 'placeholder': 'Mon Super Titre', 'required': 'required'}}) }}
-            </div>
-            <div class="mb-6">
-                {{ form_label(form.content, 'Contenu de l\'article :', {'label_attr': {'class': 'block mb-2 text-sm underline font-medium text-gray-900'}}) }}
-                {{ form_widget(form.content, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5', 'placeholder': 'Contenu...', 'required': 'required'}}) }}
-            </div>
-            <div class="mb-6">
-                {{ form_label(form.imageFile, 'Image de l\'article :', {'label_attr': {'class': 'block mb-2 text-sm underline font-medium text-gray-900'}}) }}
-                {{ form_widget(form.imageFile, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5'}}) }}
-            </div>
-            <div class="flex justify-center w-full">
-                <input type="submit" class="cursor-pointer text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center" value="{{ button_label|default('Ajouter') }}"/>
-            </div>
-        {{ form_end(form) }}
+
+        {% include "partials/Forms/Form.html.twig" with { 'button_color': 'blue', 'button_label': 'Ajouter' } %}
    </div>
 </div>
 {% endblock %}

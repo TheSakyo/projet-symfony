@@ -24,17 +24,14 @@
                     <a href="update_{{ article.getId }}">
                         <button type="button" class="focus:outline-none text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm p-1.5 mr-2 mb-2">Modifier</button>
                     </a>
-                    <a href="delete_{{ article.id }}?token={{ csrf_token('delete' ~ article.id) }}" onclick="alert('Êtes-vous sûr de vouloir supprimer cet article ?');">
+                    <a href="delete_{{ article.id }}" onclick="alert('Êtes-vous sûr de vouloir supprimer cet article ?');">
                         <button type="button" class="focus:outline-none text-white bg-red-400 hover:bg-red-500 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm p-1.5 mr-2 mb-2">Supprimer</button>
                     </a>
                 </div>
             <section>
           {% endif %}
-          <section class="my-12">
-            {{ article.getContent }}
-          </section>
-          <section class="my-12">
-            {{ include('entities/comment/index.html.twig') }}
+          <section class="my-12"> {{ article.getContent }} </section>
+          <section class="my-12"> {{ include('entities/comment/index.html.twig') }} </section>
       </article>
   </div>
 </main>

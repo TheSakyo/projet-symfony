@@ -58,6 +58,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Article::class, orphanRemoval: true)]
     private Collection $articles;
 
+    /**
+     * @var Collection Les commentaires associés à l'utilisateur
+     */
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Comment::class, orphanRemoval: true)]
     private Collection $comments;
 
@@ -71,8 +74,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
      * Constructeur de l'Utilisateur.
      * 
      */
-    public function __construct() { $this->articles = new ArrayCollection();
-    $this->comments = new ArrayCollection();  }
+    public function __construct() { 
+        
+        $this->articles = new ArrayCollection();
+        $this->comments = new ArrayCollection();  
+    }
 
 
     /* ----------------------------------------------- */
@@ -132,15 +138,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
 
         return array_unique($roles);
     }
-    
         
+                    /* ------------------------------------------------------- */
+    
     /**
      * Retourne tous les articles de l'utilisateur.
      * 
-     * @return Collection<int, Article> 
+     * @return Collection<int, Article> Les articles associés à l'utilisateur
      */
     public function getArticles(): Collection { return $this->articles; }
 
+    /**
+     * Retourne tous les commentaires de l'utilisateur.
+     * 
+     * @return Collection<int, Comment> Les commentaires associés à l'utilisateur
+     */
+    public function getComments(): Collection { return $this->comments; }
 
     /* ----------------------------------------------- */
     /* ------------------- SETTERS ------------------- */
@@ -205,7 +218,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
     /**
      * Ajoute un article qui sera associé à l'utilisateur.
      * 
-     * @param Article l'Article à ajouté en question.
+     * @param Article L'Article à ajouté en question.
      * 
      * @return self L'Utilisateur en question.
      */
@@ -223,7 +236,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
     /**
      * Supprime un article qui sera associé à l'utilisateur.
      * 
-     * @param Article l'Article à supprimé en question.
+     * @param Article L'Article à supprimé en question.
      * 
      * @return self L'Utilisateur en question.
      */
@@ -234,6 +247,43 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
 
             // Donne la valeur null au côté propriétaire (à moins qu'il n'ait déjà été modifié)
             if($article->getUser() === $this) { $article->setUser(null); }
+        }
+
+        return $this;
+    }
+                    /* ------------------------------------------- */
+
+    /**
+     * Ajoute un commentaire qui sera associé à l'utilisateur.
+     * 
+     * @param Comment Le commentaire à ajouté en question.
+     * 
+     * @return self L'Utilisateur en question.
+     */
+    public function addComment(Comment $comment): self {
+
+        if(!$this->comments->contains($comment)) {
+            
+            $this->comments->add($comment);
+            $comment->setUser($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Supprime un commentaire qui sera associé à l'utilisateur.
+     * 
+     * @param Comment Le commentaire à supprimé en question.
+     * 
+     * @return self L'Utilisateur en question.
+     */
+    public function removeComment(Comment $comment): self {
+
+        if($this->comments->removeElement($comment)) {
+
+            // donne la valeur null au côté propriétaire (à moins qu'il n'ait déjà été modifié)
+            if($comment->getUser() === $this) { $comment->setUser(null); }
         }
 
         return $this;
@@ -253,35 +303,4 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
         // Si vous stockez des données temporaires et sensibles sur l'utilisateur, effacez-les ici
         // $this->plainPassword = null ;
     }
-
-    /**
-     * @return Collection<int, Comment>
-     */
-    public function getComments(): Collection
-    {
-        return $this->comments;
-    }
-
-    public function addComment(Comment $comment): self
-    {
-        if (!$this->comments->contains($comment)) {
-            $this->comments->add($comment);
-            $comment->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeComment(Comment $comment): self
-    {
-        if ($this->comments->removeElement($comment)) {
-            // set the owning side to null (unless already changed)
-            if ($comment->getUser() === $this) {
-                $comment->setUser(null);
-            }
-        }
-
-        return $this;
-    }
-
 }

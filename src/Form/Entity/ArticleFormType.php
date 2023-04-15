@@ -15,18 +15,34 @@ use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class ArticleFormType extends AbstractType {
 
+    /**
+     * On construit le formulaire en question
+     *
+     * @param FormBuilderInterface $builder Interface de construction de formulaire pour effectué la création de celui-ci
+     * @param array $option Un tableau récupérant différentes options pour le formulaire
+     * 
+     */
     public function buildForm(FormBuilderInterface $builder, array $options): void {
         
-        $builder->add('title', TextType::class, [
+        // ⬇️ Initialise les champs du formulaire ⬇️ //
 
-            'constraints' => [ new NotBlank(), new NotNull() ]
+        $builder->add('title', TextType::class, [
+            
+            'label' => 'Titre :',
+            'attr' => [ 'placeholder' => 'Mon Super Titre' ],  
+            'constraints' => [ new NotBlank(), new NotNull() ],
+            'required' => true
+        
         ]);
 
                         /* -------------------------------- */
 
-        $builder->add('content', TextareaType::class, [
-
-            'constraints' => [ new NotBlank(), new NotNull() ]
+        $builder->add('content', TextareaType::class, [ 
+            
+            'label' => 'Contenu :',
+            'attr' => [ 'placeholder' => 'Contenu de l\'article...' ],
+            'constraints' => [ new NotBlank(), new NotNull() ],
+            'required' => true 
         ]);
 
                         /* -------------------------------- */
@@ -39,44 +55,60 @@ class ArticleFormType extends AbstractType {
             'asset_helper' => true
 
         ]);
+                
+        // ⬆️ Initialise les champs du formulaire ⬆️ //
     }
                         /* -------------------------------------------------------- */
                         /* -------------------------------------------------------- */
 
+    /**
+     * On vérifie les erreurs de champs du formulaire en question
+     *
+     * @param FormInterface $form Interface de formulaire pour vérifier les erreurs
+     * 
+     */
     public static function checkErrors(FormInterface $form) {
 
-        $errors = null;
+        $errors = null; // Permettra de récupérer les erreurs de champs
 
-                /* --------------------------------- */
+                /* ------------------------------------------------- */
+        
+        // ⬇️ Si le formulaire à bien été envoyé mais qu'il n'est pas valide, on vérifie les erreurs en question ⬇️ //
+        if($form->isSubmitted() && !$form->isValid()) {
+        
+            // Si le formulaire est vide, on définit une erreur disant qu'il faut remplir le formulaire
+            if($form->isEmpty()) { $errors[] = "Veuillez remplir le formulaire"; } 
+
+            // Sinon, on vérifie les erreurs de chaque champs
+            else {    
                 
-        if($form->isEmpty()) {
+                $title = $form->get('title')->getData(); // Récupère le champ de titre
+                $content = $form->get('content')->getData(); // Récupère le champ de contenu
+        
+                                /* ---------------------------------- */
 
-            $parameters['errorForm'][] = "Veuillez remplir le formulaire";
+                // Si le champ titre est vide, on définit une erreur disant que c'est invalide
+                if($form->has('title') && ctype_space($title) || empty($title)) { $errors[] = "Le titre est invalide !"; }
 
-        } else {
-
-            $title = $form->get('title')->getData();
-            $content = $form->get('content')->getData();
-    
-                            /* ---------------------------------- */
-
-            if($form->has('title') && ctype_space($title) || empty($title)) {
-
-                $errors[] = "Le titre est invalide !";
-            }
-
-            if($form->has('content') && ctype_space($content) || empty($content)) {
-
-                $errors[] = "Le contenu est invalide !";
+                // Si le champ contenu est vide, on définit une erreur disant que c'est invalide
+                if($form->has('content') && ctype_space($content) || empty($content)) { $errors[] = "Le contenu est invalide !"; }
             }
         }
-                /* --------------------------------- */
+        // ⬆️ Si le formulaire à bien été envoyé mais qu'il n'est pas valide, on vérifie les erreurs en question ⬆️ //
 
-        return $errors;
+                        /* ------------------------------------------------- */
+
+        return $errors; // Retourne les erreurs si il ont bien été ajoutés
     }
 
                         /* -------------------------------------------------------- */
                         /* -------------------------------------------------------- */
 
+    /**
+     * Configure des options nécessaires pour le formulaire en question
+     *
+     * @param OptionsResolver $resolver Un instance de OptionsResolver
+     * 
+     */
     public function configureOptions(OptionsResolver $resolver): void { $resolver->setDefaults([ 'data_class' => Article::class ]); }
 }

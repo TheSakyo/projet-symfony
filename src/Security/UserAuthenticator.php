@@ -17,21 +17,48 @@ use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
 class UserAuthenticator extends AbstractLoginFormAuthenticator {
 
-    use TargetPathTrait;
+    // Trait permettant d'obtenir (et de définir) la dernière URL visitée par l'utilisateur avant d'être obligé de s'authentifier.
+    use TargetPathTrait; 
+    
+    // Définit la route de connexion de l'utilisateur
+    public const LOGIN_ROUTE = 'login_user'; 
 
-    public const LOGIN_ROUTE = 'login_user';
+                        /* -------------------------------------------------------------- */
 
     public function __construct(private UrlGeneratorInterface $urlGenerator) {}
 
+                        /* -------------------------------------------------------------- */                        
+                        /* -------------------------------------------------------------- */
+                        /* -------------------------------------------------------------- */
+
+    /**
+     * Authentifie l'Utilisateur en question dans le site
+     * 
+     * @param Request $request La requête en question
+     * 
+     */
     public function authenticate(Request $request): Passport {
 
         $email = $request->request->get('email', '');
         $request->getSession()->set(Security::LAST_USERNAME, $email);
 
-        return new Passport(new UserBadge($email), new PasswordCredentials($request->request->get('password', '')), 
-                            [ new CsrfTokenBadge('authenticate', $request->request->get('_csrf_token')) ]);
+        return new Passport(new UserBadge($email), new PasswordCredentials($request->request->get('password', '')),
+                             [ new CsrfTokenBadge('authenticate', $request->request->get('_csrf_token')) ]);
     }
 
+                        /* -------------------------------------------------------------- */                        
+                        /* -------------------------------------------------------------- */
+
+    /**
+     * Vérifie si l'Utilisateur à bien été authentifié
+     * 
+     * @param Request $request La requête en question
+     * @param TokenInterface $token Une instance de 'TokenInterface'
+     * @param string $firewallName Le nom du pare-feu de L'Utilisateur pour la connexion
+     * 
+     * 
+     * @return ?Response Une redirection HTTP si tous est ok, sinon une exception
+     */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response {
 
         if($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) { return new RedirectResponse($targetPath); }
@@ -40,6 +67,16 @@ class UserAuthenticator extends AbstractLoginFormAuthenticator {
         // return new RedirectResponse($this->urlGenerator->generate('some_route'));
         throw new \Exception('TODO : fournit une redirection valide à l\'intérieur de '.__FILE__);
     }
-
-    protected function getLoginUrl(Request $request): string {  return $this->urlGenerator->generate(self::LOGIN_ROUTE); }
+    
+                        /* -------------------------------------------------------------- */                        
+                        /* -------------------------------------------------------------- */
+    
+    /**
+     * Récupère le lien de la page de connexion Utilisateur
+     * 
+     * @param Request $request La requête en question
+     * 
+     * @return string Chaîne de caractère retournant le lien du route du formulaire de connexion Utilisateur
+     */
+    protected function getLoginUrl(Request $request): string { return $this->urlGenerator->generate(self::LOGIN_ROUTE); }
 }

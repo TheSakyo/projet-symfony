@@ -12,7 +12,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
 #[Vich\Uploadable]
-class Article {
+class Article implements \Serializable {
 
     /* ------------------------------------------------- */
     /* ------------------- VARIABLES ------------------- */
@@ -50,7 +50,6 @@ class Article {
     #[Vich\UploadableField(mapping: "article_img", fileNameProperty: "image")]
     private $imageFile = null;
 
-
     /**
      * @var ?\DateTimeImmutable La dâte de l'articlé
      */
@@ -64,13 +63,22 @@ class Article {
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
+    /**
+     * @var Collection Les commentaires associé à l'article
+     */
     #[ORM\OneToMany(mappedBy: 'article', targetEntity: Comment::class, orphanRemoval: true)]
     private Collection $comments;
 
-    public function __construct()
-    {
-        $this->comments = new ArrayCollection();
-    }
+    /* ---------------------------------------------------- */
+    /* ------------------- CONSTRUCTEUR ------------------- */
+    /* ---------------------------------------------------- */
+
+    
+    /**
+     * Constructeur de l'Article.
+     * 
+     */
+    public function __construct() { $this->comments = new ArrayCollection();  }
 
 
     /* ----------------------------------------------- */
@@ -122,10 +130,19 @@ class Article {
     /** 
      * Retourne l'utilisateur associé à l'article.
      * 
-     * @return ?User L'Utilisateur à l'article
+     * @return ?User L'Utilisateur associé à l'article
      */
     public function getUser(): ?User { return $this->user; }
 
+        
+                    /* ------------------------------------------------------- */
+
+    /**
+     * Retourne tous les commentaires de l'utilisateur.
+     * 
+     * @return Collection<int, Comment> Les commentaires associés à l'article
+     */
+    public function getComments(): Collection { return $this->comments; }
 
     /* ----------------------------------------------- */
     /* ------------------- SETTERS ------------------- */
@@ -208,18 +225,15 @@ class Article {
         $this->user = $user;
         return $this;
     }
+    
+    /* ------------------------------------------------ */
+    /* ------------------- MÉTHODES ------------------- */
+    /* ------------------------------------------------ */
 
-    /**
-     * @return Collection<int, Comment>
-     */
-    public function getComments(): Collection
-    {
-        return $this->comments;
-    }
+    public function addComment(Comment $comment): self {
 
-    public function addComment(Comment $comment): self
-    {
-        if (!$this->comments->contains($comment)) {
+        if(!$this->comments->contains($comment)) {
+
             $this->comments->add($comment);
             $comment->setArticle($this);
         }
@@ -227,15 +241,20 @@ class Article {
         return $this;
     }
 
-    public function removeComment(Comment $comment): self
-    {
-        if ($this->comments->removeElement($comment)) {
-            // set the owning side to null (unless already changed)
-            if ($comment->getArticle() === $this) {
-                $comment->setArticle(null);
-            }
+    public function removeComment(Comment $comment): self {
+
+        if($this->comments->removeElement($comment)) {
+
+            // donne la valeur null au côté propriétaire (à moins qu'il n'ait déjà été modifié)
+            if($comment->getArticle() === $this) { $comment->setArticle(null); }
         }
 
         return $this;
     }
+
+                /* ------------------------------------------- */
+
+                
+    public function serialize() { return serialize($this); }
+    public function unserialize($serialized) {}
 }

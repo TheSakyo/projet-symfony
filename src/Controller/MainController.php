@@ -2,11 +2,11 @@
 
 namespace App\Controller;
 
+use InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 
 class MainController extends AbstractController {   
     
@@ -18,19 +18,22 @@ class MainController extends AbstractController {
      * 
      * @return Response Une réponse pour la vue
      */
-    #[Route]
     public function index(string $renderFile, array|null $parameters = null): Response { 
 
+        // Définit un tableau pour le menu de navigation //
         $parameters['navbar'] = [
 
             [ 'url' => '/home', 'path' => 'home', 'label' => 'Accueil'],
-            [ 'url' => '/article', 'path' => 'articles_list', 'label' => 'Liste des Articles'],
+            [ 'url' => '/article', 'path' => 'article_list', 'label' => 'Liste des Articles'],
         ];
-                     /* --------------------------------------- */
+        // Définit un tableau pour le menu de navigation //
 
-        return $this->render($renderFile, $parameters); 
+                     /* --------------------------------------- */
+        
+        return $this->render($renderFile, $parameters); // Retourne la vue associé
     }
 
+                 /* --------------------------------------------------------- */
                  /* --------------------------------------------------------- */
 
     /**
@@ -45,8 +48,16 @@ class MainController extends AbstractController {
     public function form(Request $request, string $type, mixed $data = null): FormInterface { 
 
         $form = $this->createForm($type, $data); // On créer le formulaire
-        $form->handleRequest($request); // On envoie la requête
 
-        return $form; // On renvoie le formulaire
+                    /* --------------------------------------------- */
+
+        // ⬇️ On essaie d'envoyer la requête vers l'objet en question à mettre à jour ⬇️ //
+        try { $form->handleRequest($request); } 
+        catch(InvalidArgumentException) {}
+        // ⬆️ On essaie d'envoyer la requête vers l'objet en question à mettre à jour ⬆️ //
+        
+                    /* --------------------------------------------- */
+
+        return $form; // On renvoie le formulaire dont il est question
     }
 }
