@@ -39,8 +39,7 @@ class ArticleFormType extends AbstractType {
 
             'label' => 'Catégorie :',
             'attr' => [
-                 'placeholder' => 'Choissisez une ou plusieurs catégories', 
-                 'class' => 'oveflow-y-auto'    
+                'placeholder' => 'Choissisez une ou plusieurs catégories',
             ],  
             'class' => Tag::class,
             'choice_label' => 'title',
