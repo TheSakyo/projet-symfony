@@ -50,7 +50,7 @@ class ArticleController extends MainController {
             $isDelete = $request->query->get('delete');
             
             if($isDelete && $isDelete =='true') {
-                
+
                 $commentRepository->remove($comment, true); 
                 return $this->redirectToRoute('article_info', ['id' => $article->getId(), 'id_comment' => 'null']);
             }
@@ -223,7 +223,7 @@ class ArticleController extends MainController {
 
                                 /* --------------------------- */
 
-            return $this->redirect('/article/info_'.$article->getId()); // Redirige l'utilisateur dans la liste de ses articles
+            return $this->redirect('/article/info_'.$article->getId()."/null"); // Redirige l'utilisateur dans la liste de ses articles
         } 
 
                             /* -------------------------------------- */
@@ -281,7 +281,7 @@ class ArticleController extends MainController {
 
                                 /* --------------------------- */
 
-            return $this->redirect('/article/info_'.$article->getId()); // Redirige l'utilisateur dans la liste de ses articles
+            return $this->redirect('/article/info_'.$article->getId()."/null"); // Redirige l'utilisateur dans la liste de ses articles
         } 
 
                             /* -------------------------------------- */
