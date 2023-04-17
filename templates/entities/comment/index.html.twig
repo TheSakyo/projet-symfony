@@ -12,27 +12,31 @@
                 <input type="submit" class="cursor-pointer inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 hover:bg-blue-800" value="Postez votre commentaire">
             </div>
         {{ form_end(form) }}
-        <section class="p-6 my-6 text-base bg-slate-10 0 rounded-lg w-full shadow">
-            <div class="flex justify-between items-center mb-2 w-full">
-                <div class="flex items-center">
-                    <p class="inline-flex items-center mr-3 text-sm text-gray-900">Dydy</p>
-                    <p> - </p>
-                    <p class="mx-2 text-sm text-gray-600">
-                        <time>xxx/xxx/xxx</time>
-                    </p>
-                </div>
-                <div>
-                    <div class="flex py-1 text-sm text-white">
-                        <div>
-                            <a href="#" class="shadow py-2 px-4 mx-2 rounded bg-yellow-400 hover:bg-yellow-600">Modifier</a>
+        <div>
+            {% for comment in article.getComments %}
+                <div class="p-6 my-6 text-base bg-slate-10 0 rounded-lg w-full shadow">
+                    <div class="flex justify-between items-center mb-2 w-full">
+                        <div class="flex items-center">
+                            <p class="inline-flex items-center mr-3 text-sm text-gray-900">{{ comment.getUser.getName }}</p>
+                            <p> - </p>
+                            <p class="mx-2 text-sm text-gray-600">
+                                <time>{{ comment.getDate|date('d/m/Y à H:i') }}</time>
+                            </p>
                         </div>
                         <div>
-                            <a href="#" class="shadow py-2 px-4 mx-2 rounded bg-red-400 hover:bg-red-600">Supprimer</a>
+                            <div class="flex py-1 text-sm text-white">
+                                <div>
+                                    <a href="{{ path('article_info', {'id': article.getId, 'id_comment': comment.getId}) }}" class="shadow py-2 px-4 mx-2 rounded bg-yellow-400 hover:bg-yellow-600">Modifier</a>
+                                </div>
+                                <div>
+                                    <a href="{{ path('article_info', {'id': article.getId, 'id_comment': comment.getId}) }}?delete=true" class="shadow py-2 px-4 mx-2 rounded bg-red-400 hover:bg-red-600">Supprimer</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <p class="text-slate-500">Chibro Toto & Stifane</p>
-        </section>
+                    <p class="text-slate-500">{{ comment.getContent }}</p>
+                </div>         
+            {% endfor %}
+        </div>
     </div>
 </div> 

@@ -17,7 +17,7 @@
                     {% if route != 'articles_user' %} <p>par <span class="text-xs font-bold">{{ article.getUser.getName }}</span></p> {% endif %}
         
                     <div class="flex justify-center gap-4 mt-4 w-full">
-                        <a href="info_{{ article.id }}">
+                        <a href="{{ path('article_info', {'id': article.getId, 'id_comment': null}) }}">
                             <button type="button" class="focus:outline-none text-white bg-slate-400 hover:bg-slate-500 focus:ring-4 focus:ring-slate-300 font-medium rounded-lg text-sm p-2 mr-2 mb-2">En savoir plus...</button>
                         </a>
                     </div>

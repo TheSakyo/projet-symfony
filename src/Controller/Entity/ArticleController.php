@@ -10,6 +10,7 @@ use App\Entity\User;
 use App\Form\Entity\ArticleFormType;
 use App\Form\Entity\CommentFormType;
 use App\Repository\ArticleRepository;
+use App\Repository\CommentRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,11 +34,43 @@ class ArticleController extends MainController {
      * 
      * @return Response Une vue associé 
      */                
-    #[Route('/info_{id}', name: 'article_info')]
-    public function info(Request $request, Article $article): Response {    
+    #[Route('/info_{id}/{id_comment}', name: 'article_info', methods: ['GET', 'POST'])]
+    public function info(Request $request, Article $article, CommentRepository $commentRepository): Response {    
 
-        $comment = new Comment(); // Instancie un nouveau commentaire
+        $user = $this->getUser(); // Récupère l'Utilisateur connecté
+        $commentID = $request->attributes->get('id_comment'); // Récupère l'identifant du commentaire en 'GET'
+
+                                    /* ---------------------------- */
+
+        
+        // Si on arrive à récupérer l'identifiant du commentaire en 'GET, on récupère le commentaire en question
+        if($commentID) { 
+            
+            $comment = $commentRepository->find($commentID); 
+            $isDelete = $request->query->get('delete');
+            
+            if($isDelete && $isDelete =='true') {
+                
+                $commentRepository->remove($comment, true); 
+                return $this->redirectToRoute('article_info', ['id' => $article->getId(), 'id_comment' => 'null']);
+            }
+        } 
+        
+        // Sinon, on instancie un nouveau commentaire
+        else { $comment = new Comment();  }
+
         $form = $this->form($request, CommentFormType::class, $comment); // Récupère le formulaire du commentaire
+
+                        /* ----------------------------------------------------------- */
+
+        if($form->isSubmitted() && $form->isValid() && $user) {
+
+            $comment->setArticle($article);
+            $comment->setUser($user);
+            $comment->setDate(new DateTimeImmutable());
+            $commentRepository->save($comment, true); 
+            return $this->redirectToRoute('article_info', ['id' => $article->getId(), 'id_comment' => 'null']);
+        }
 
                         /* ----------------------------------------------------------- */
 
@@ -45,8 +78,7 @@ class ArticleController extends MainController {
         return $this->index('entities/article/info.html.twig', [
             
             'form' => $form->createView(),
-            'article' => $article,
-            'comments' => $article->getComments()
+            'article' => $article
         ]);
         // Retourne la vue avec les paramètres associés //
     }
