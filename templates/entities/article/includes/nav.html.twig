@@ -1,19 +1,19 @@
 
-{# INITIALISE LES VARIABLES NÉCESSAIRES #}
+{# INITIALISE LES VARIABLES NÉCESSAIRES POUR LA PAGINATION #}
 
 {% set pageCount = (total / articles.getItemNumberPerPage())|round(0, 'ceil') %}
 {% set currentPageNumber = articles.getCurrentPageNumber() %}
 {% set start = ((currentPageNumber-1) / 3)|round(0, 'floor')*3 + 1 %}
 {% set end = (start + 2 < pageCount) ? start + 2 : pageCount %}
 
-{# INITIALISE LES VARIABLES NÉCESSAIRES #}
+{# INITIALISE LES VARIABLES NÉCESSAIRES POUR LA PAGINATION #}
 
 <nav class="navigation">
 	{% if pageCount > 1 %}
 		<ul class="flex gap-4 items-center pagination">
 			{% if currentPageNumber > 1 %}
 				<li class="page-item">
-					<a class="block px-3 py-2 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 page-link" href="{{ path(route, articleList|merge({('page'): articles.currentPageNumber - 1})) }}" aria-label="Previous">
+					<a class="block px-3 py-2 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 page-link" href="{{ path(route, articles|merge({('page'): articles.currentPageNumber - 1})) }}" aria-label="Previous">
 						<span aria-hidden="true">&laquo;</span>
 						<span class="sr-only">Précédent</span>
 					</a>
@@ -29,7 +29,7 @@
                 </li>
             {% else %}
                 <li class="page-item">
-                    <a class="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 page-link" href="{{ path(route, articleList|merge({('page'): page})) }}">{{ page }}</a>
+                    <a class="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 page-link" href="{{ path(route, articles|merge({('page'): page})) }}">{{ page }}</a>
                 </li>
             {% endif %}
         {% endfor %}
@@ -38,7 +38,7 @@
 
 			{% if currentPageNumber < pageCount %}
 				<li class="page-item">
-					<a class="block px-3 py-2 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 page-link" href="{{ path(route, articleList|merge({('page'): articles.currentPageNumber + 1})) }}" aria-label="Next">
+					<a class="block px-3 py-2 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 page-link" href="{{ path(route, articles|merge({('page'): articles.currentPageNumber + 1})) }}" aria-label="Next">
 						<span aria-hidden="true">&raquo;</span>
 						<span class="sr-only">Suivant</span>
 					</a>

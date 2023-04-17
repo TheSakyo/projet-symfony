@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\TagRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TagRepository::class)]
@@ -26,6 +28,14 @@ class Tag {
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
+    #[ORM\ManyToMany(targetEntity: Article::class, mappedBy: 'tag')]
+    private Collection $articles;
+
+    public function __construct()
+    {
+        $this->articles = new ArrayCollection();
+    }
+
     /* ----------------------------------------------- */
     /* ------------------- GETTERS ------------------- */
     /* ----------------------------------------------- */
@@ -44,6 +54,16 @@ class Tag {
      */
     public function getTitle(): ?string { return $this->title; }
 
+            
+                    /* ------------------------------------------------------- */
+
+    /**
+     * Retourne tous les articles de la catégorie.
+     * 
+     * @return Collection<int, Article> Les articles associées à la catégorie
+     */
+    public function getArticles(): Collection { return $this->articles; }
+
     /* ----------------------------------------------- */
     /* ------------------- SETTERS ------------------- */
     /* ----------------------------------------------- */
@@ -58,6 +78,41 @@ class Tag {
     public function setTitle(string $title): self {
 
         $this->title = $title;
+        return $this;
+    }
+
+    /* ------------------------------------------------ */
+    /* ------------------- MÉTHODES ------------------- */
+    /* ------------------------------------------------ */
+
+    /**
+     * Ajoute un article qui sera associé à la catégorie.
+     * 
+     * @param Article L'Article à ajouté en question.
+     * 
+     * @return self La catégorie en question.
+     */
+    public function addArticle(Article $article): self {
+
+        if(!$this->articles->contains($article)) {
+
+            $this->articles->add($article);
+            $article->addTag($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Supprime un article qui sera associé à la catégorie.
+     * 
+     * @param Article L'Article à ajouté en question.
+     * 
+     * @return self La catégorie en question.
+     */
+    public function removeArticle(Article $article): self {
+
+        if($this->articles->removeElement($article)) { $article->removeTag($this); }
         return $this;
     }
 }

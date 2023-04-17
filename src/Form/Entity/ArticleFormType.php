@@ -3,6 +3,9 @@
 namespace App\Form\Entity;
 
 use App\Entity\Article;
+use App\Entity\Tag;
+use App\Repository\TagRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -14,6 +17,12 @@ use Symfony\Component\Validator\Constraints\NotNull;
 use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class ArticleFormType extends AbstractType {
+    
+    private $tagRepository;
+    public function __construct(TagRepository $tagRepository) { $this->tagRepository = $tagRepository; }
+    
+                    /* ----------------------------------------------------------------------- */
+                    /* ----------------------------------------------------------------------- */
 
     /**
      * On construit le formulaire en question
@@ -26,15 +35,30 @@ class ArticleFormType extends AbstractType {
         
         // ⬇️ Initialise les champs du formulaire ⬇️ //
 
+        $builder->add('tag', EntityType::class, [
+
+            'label' => 'Catégorie :',
+            'attr' => [
+                 'placeholder' => 'Choissisez une ou plusieurs catégories', 
+                 'class' => 'oveflow-y-auto'    
+            ],  
+            'class' => Tag::class,
+            'choice_label' => 'title',
+            "by_reference" => false,
+            'multiple' => true,
+            'required' => true
+        ]);
+
+                        /* -------------------------------- */
+
         $builder->add('title', TextType::class, [
-            
+
             'label' => 'Titre :',
             'attr' => [ 'placeholder' => 'Mon Super Titre' ],  
             'constraints' => [ new NotBlank(), new NotNull() ],
             'required' => true
         
-        ]);
-
+        ]);                
                         /* -------------------------------- */
 
         $builder->add('content', TextareaType::class, [ 

@@ -1,5 +1,5 @@
 {{ form_start(form, {'attr': {'enctype': 'multipart/form-data', 'class': 'bg-gray-300 p-12 rounded-md'}}) }}
-
+    
     {% for error in errorsForm %}
         {% include "partials/Forms/errorsForm.html.twig" with { 'error': error } %}
     {% endfor %}
@@ -21,7 +21,8 @@
 
                 <div class="mb-6">
                     {{ form_label(input, null, {'label_attr': {'for': key, 'class': 'block mb-2 text-sm underline font-medium text-gray-900'}}) }}
-                    {{ form_widget(input, {'attr': {'id': key, 'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5' }}) }}
+                    <div>
+                    {{ form_widget(input, {'attr': {'id': key, 'class': 'flex flex-col bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5' }}) }}
                 </div>
 
             {% endif %}

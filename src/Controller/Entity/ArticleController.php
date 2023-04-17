@@ -34,7 +34,7 @@ class ArticleController extends MainController {
      * 
      * @return Response Une vue associé 
      */                
-    #[Route('/info_{id}/{id_comment}', name: 'article_info', methods: ['GET', 'POST'])]
+    #[Route('/info_{id}/{id_comment}', name: 'article_info')]
     public function info(Request $request, Article $article, CommentRepository $commentRepository): Response {    
 
         $user = $this->getUser(); // Récupère l'Utilisateur connecté
@@ -44,11 +44,11 @@ class ArticleController extends MainController {
 
         
         // Si on arrive à récupérer l'identifiant du commentaire en 'GET, on récupère le commentaire en question
-        if($commentID) { 
-            
+        if($commentID != 'null') { 
+
             $comment = $commentRepository->find($commentID); 
             $isDelete = $request->query->get('delete');
-            
+                
             if($isDelete && $isDelete =='true') {
 
                 $commentRepository->remove($comment, true); 
@@ -109,7 +109,6 @@ class ArticleController extends MainController {
         return $this->index('entities/article/index.html.twig',[
             
             'route' => 'article_list',
-            'articleList' => $allArticle,
             'total' => $articlesWithPagination->getTotalItemCount(),
             'articles' => $articlesWithPagination
         ]);
@@ -169,7 +168,6 @@ class ArticleController extends MainController {
         return $this->index('entities/article/userArticles.html.twig',[
             
             'route' => 'articles_user',
-            'articleList' => $userArticles,
             'total' => $total,
             'articles' => $articlesWithPagination,
             'error' => $error

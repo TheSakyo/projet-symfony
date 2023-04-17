@@ -69,6 +69,9 @@ class Article implements \Serializable {
     #[ORM\OneToMany(mappedBy: 'article', targetEntity: Comment::class, orphanRemoval: true)]
     private Collection $comments;
 
+    #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'articles')]
+    private Collection $tag;
+
     /* ---------------------------------------------------- */
     /* ------------------- CONSTRUCTEUR ------------------- */
     /* ---------------------------------------------------- */
@@ -78,7 +81,8 @@ class Article implements \Serializable {
      * Constructeur de l'Article.
      * 
      */
-    public function __construct() { $this->comments = new ArrayCollection();  }
+    public function __construct() { $this->comments = new ArrayCollection();
+    $this->tag = new ArrayCollection();  }
 
 
     /* ----------------------------------------------- */
@@ -138,11 +142,18 @@ class Article implements \Serializable {
                     /* ------------------------------------------------------- */
 
     /**
-     * Retourne tous les commentaires de l'utilisateur.
+     * Retourne tous les commentaires de l'article.
      * 
      * @return Collection<int, Comment> Les commentaires associés à l'article
      */
     public function getComments(): Collection { return $this->comments; }
+
+    /**
+     * Retourne toutes les catégories de l'article.
+     * 
+     * @return Collection<int, Tag> Les catégories associées à l'article
+     */
+    public function getTag(): Collection { return $this->tag; }
 
     /* ----------------------------------------------- */
     /* ------------------- SETTERS ------------------- */
@@ -230,6 +241,13 @@ class Article implements \Serializable {
     /* ------------------- MÉTHODES ------------------- */
     /* ------------------------------------------------ */
 
+    /**
+     * Ajoute un commentaire qui sera associé à l'article.
+     * 
+     * @param Comment Le Commentaire à ajouté en question.
+     * 
+     * @return self L'Article en question.
+     */
     public function addComment(Comment $comment): self {
 
         if(!$this->comments->contains($comment)) {
@@ -241,6 +259,13 @@ class Article implements \Serializable {
         return $this;
     }
 
+    /**
+     * Supprime un commentaire qui sera associé à l'article.
+     * 
+     * @param Comment Le commentaire à ajouté en question.
+     * 
+     * @return self L'Article en question.
+     */
     public function removeComment(Comment $comment): self {
 
         if($this->comments->removeElement($comment)) {
@@ -252,9 +277,37 @@ class Article implements \Serializable {
         return $this;
     }
 
+    /**
+     * Ajoute une catégorie qui sera associé à l'article.
+     * 
+     * @param Tag La catégorie à ajoutée en question.
+     * 
+     * @return self L'Article en question.
+     */
+    public function addTag(Tag $tag): self {
+        
+        if(!$this->tag->contains($tag)) { $this->tag->add($tag); }
+        return $this;
+    }
+
+    /**
+     * Supprime une catégorie qui sera associé à l'article.
+     * 
+     * @param Tag La catégorie à ajoutée en question.
+     * 
+     * @return self L'Article en question.
+     */
+    public function removeTag(Tag $tag): self
+    {
+        $this->tag->removeElement($tag);
+
+        return $this;
+    }
+
                 /* ------------------------------------------- */
 
                 
     public function serialize() { return serialize($this); }
     public function unserialize($serialized) {}
+
 }
