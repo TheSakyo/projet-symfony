@@ -12,14 +12,14 @@
 
             {% if key == 'agreeTerms' %}
 
-                <div class="flex justify-start items-center w-fit-content gap-2 mb-4">
+                <div class="flex justify-start items-center w-fit-content gap-2 my-4">
                     {{ form_label(input, null, {'label_attr': {'for': key, 'class': 'block mb-1 text-sm font-medium text-gray-900'}}) }}
                     {{ form_widget(input, {'attr': {'id': key, 'class': 'cursor-pointer bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block' }}) }}
                 </div>
                     
             {% else %}
 
-                <div class="mb-6">
+                <div class="my-6">
                     {{ form_label(input, null, {'label_attr': {'for': key, 'class': 'block mb-2 text-sm underline font-medium text-gray-900'}}) }}
                     <div>
                     {{ form_widget(input, {'attr': {'id': key, 'class': 'flex flex-col bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5' }}) }}
@@ -31,7 +31,7 @@
 
     {% endfor %}
     
-    <div class="flex justify-center w-full">
+    <div class="flex justify-center w-full my-8">
         <input type="submit" class="cursor-pointer text-white bg-{{ button_color }}-700 hover:bg-{{ button_color }}-800 focus:ring-4 focus:outline-none focus:ring-{{ button_color }}-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center" value="{{ button_label }}"/>
     </div>
 {{ form_end(form) }}
