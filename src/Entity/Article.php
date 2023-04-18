@@ -70,7 +70,7 @@ class Article implements \Serializable {
     private Collection $comments;
 
     #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'articles')]
-    private Collection $tag;
+    private Collection $tags;
 
     /* ---------------------------------------------------- */
     /* ------------------- CONSTRUCTEUR ------------------- */
@@ -81,8 +81,11 @@ class Article implements \Serializable {
      * Constructeur de l'Article.
      * 
      */
-    public function __construct() { $this->comments = new ArrayCollection();
-    $this->tag = new ArrayCollection();  }
+    public function __construct() { 
+
+        $this->comments = new ArrayCollection();
+        $this->tags = new ArrayCollection();  
+    }
 
 
     /* ----------------------------------------------- */
@@ -153,7 +156,7 @@ class Article implements \Serializable {
      * 
      * @return Collection<int, Tag> Les catégories associées à l'article
      */
-    public function getTag(): Collection { return $this->tag; }
+    public function getTags(): Collection { return $this->tags; }
 
     /* ----------------------------------------------- */
     /* ------------------- SETTERS ------------------- */
@@ -286,7 +289,7 @@ class Article implements \Serializable {
      */
     public function addTag(Tag $tag): self {
         
-        if(!$this->tag->contains($tag)) { $this->tag->add($tag); }
+        if(!$this->tags->contains($tag)) { $this->tags->add($tag); }
         return $this;
     }
 
@@ -299,14 +302,13 @@ class Article implements \Serializable {
      */
     public function removeTag(Tag $tag): self
     {
-        $this->tag->removeElement($tag);
+        $this->tags->removeElement($tag);
 
         return $this;
     }
 
                 /* ------------------------------------------- */
 
-                
     public function serialize() { return serialize($this); }
     public function unserialize($serialized) {}
 

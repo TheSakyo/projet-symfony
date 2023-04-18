@@ -143,4 +143,13 @@ class Comment {
         $this->article = $article;
         return $this;
     }
+
+    /* ------------------------------------------------ */
+    /* ------------------- MÉTHODES ------------------- */
+    /* ------------------------------------------------ */
+
+    public function __toString() { 
+        
+        return "Commentaire N°".strval($this->getId()); 
+    }
 }

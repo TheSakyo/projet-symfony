@@ -4,7 +4,21 @@
 
     <div class="flex justify-around flex-wrap gap-12 items-center my-12 w-full">
         {% for article in articles %}
-            <div class="flex flex-col gap-12">
+            <div class="flex flex-col gap-3">
+                <div class="flex justify-center flex-wrap gap-2">
+
+                    {% if article.getTags is empty %} 
+
+                            <span class="text-center">Aucune Catégorie(s)</span>
+
+                    {% else %}
+    
+                        {% for tag in article.getTags %}
+                            <span class="ring-2 bg-blue-500 text-white rounded-lg w-fit px-4 py-1">{{ tag.getTitle }}</span>
+                        {% endfor %}
+                    
+                    {% endif %}
+                </div>
                 <div class="w-96 p-6 bg-gray-200 border border-gray-200 rounded-lg shadow p-8 rounded-xl shadow-lg shadow-gray-500/50">
                     <h2 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 mb-8">{{ article.getTitle }}</h2>
                     <div class="flex justify-center"> 

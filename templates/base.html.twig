@@ -19,7 +19,10 @@
         {% endblock %}
     </head>
     <body>
-        {% include 'partials/header.html.twig' %}
+        {% if errorPage is not defined %}
+            {% include 'partials/header.html.twig' %}
+        {% endif %}
+        
         {% block body %}{% endblock %}
     </body>
 </html>

@@ -35,17 +35,14 @@ class ArticleFormType extends AbstractType {
         
         // ⬇️ Initialise les champs du formulaire ⬇️ //
 
-        $builder->add('tag', EntityType::class, [
+        $builder->add('tags', EntityType::class, [
 
             'label' => 'Catégorie :',
-            'attr' => [
-                'placeholder' => 'Choissisez une ou plusieurs catégories',
-            ],  
             'class' => Tag::class,
             'choice_label' => 'title',
             "by_reference" => false,
-            'multiple' => true,
-            'required' => true
+            'multiple' => true, 
+            'required' => false
         ]);
 
                         /* -------------------------------- */

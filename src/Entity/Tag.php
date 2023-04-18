@@ -115,4 +115,11 @@ class Tag {
         if($this->articles->removeElement($article)) { $article->removeTag($this); }
         return $this;
     }
+        
+                    /* ------------------------------------------------------- */
+
+    public function __toString() { 
+        
+        return "Catégorie N°".strval($this->getId()); 
+    }
 }

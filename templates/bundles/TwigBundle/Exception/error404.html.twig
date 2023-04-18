@@ -1,0 +1,24 @@
+{% set errorPage = true %}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Page Introuvable{% endblock %}
+
+{% block body %}
+
+	<div class="h-screen flex flex-col justify-evenly justify-center items-center">
+		<div class="text-center">
+			<div class="tracking-widest mt-4 mb-8">
+				<h1 class="text-gray-500 text-6xl block underline mb-4">Erreur <span>4  0  4</span></h1>
+				<p class="text-gray-500 text-xl">Désolé, vous venez de vous faire niquer !</p>
+			</div>
+			<div class="flex justify-center items-center">
+				<img src="{{ asset('images/errors/error404.gif') }}" class="border border-0 h-96 rounded-xl shadow-xl" alt="xxx">
+			</div>
+		</div>
+		<div class>
+			<a href="/home" class="text-gray-500 font-mono text-xl bg-gray-200 p-3 rounded-md hover:shadow-md">Retour
+			</a>
+		</div>
+	</div>
+{% endblock %}

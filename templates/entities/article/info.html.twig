@@ -17,6 +17,11 @@
                   </div>
               </div>
               <h1 class="mb-4 text-3xl font-extrabold leading-tight text-gray-900 lg:mb-6 lg:text-4xl">▷ {{ article.getTitle }}</h1>
+              <hr class="my-4"/>
+              {% for tag in article.getTags %}
+                <span class="ring-2 bg-blue-500 text-white rounded-lg w-fit px-4 py-1">{{ tag.getTitle }}</span>
+              {% endfor %}
+              <hr class="my-4"/>
           </div>
           {% if app.user and app.user == article.getUser %}
             <section>
