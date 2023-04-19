@@ -4,6 +4,9 @@ namespace App\Repository;
 
 use App\Entity\Article;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Query\Expr\Join;
+use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -31,5 +34,4 @@ class ArticleRepository extends ServiceEntityRepository {
         $this->getEntityManager()->remove($entity);
         if ($flush) { $this->getEntityManager()->flush(); }
     }
-
 }

@@ -7,9 +7,11 @@ use App\Controller\MainController;
 use App\Entity\Article;
 use App\Entity\Comment;
 use App\Entity\User;
+use App\Form\SearchFormType;
 use App\Form\Entity\ArticleFormType;
 use App\Form\Entity\CommentFormType;
 use App\Repository\ArticleRepository;
+use App\Repository\ArticleTagRepository;
 use App\Repository\CommentRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -95,19 +97,36 @@ class ArticleController extends MainController {
      * @return Response Une vue associé 
      */ 
     #[Route('/', name: 'article_list')]
-    public function showAll(Request $request, PaginatorInterface $paginator): Response {
+    public function showAll(ArticleTagRepository $articleTagRepository, Request $request, PaginatorInterface $paginator): Response {
     
+        $form = $this->form($request, SearchFormType::class); // Récupère le formulaire de recherche
+
+                        /* ----------------------------------------------------------- */
+
         // Stocke tous les articles ordonné par date
         $allArticle = $this->articleRepository->findBy([], ['date' => 'DESC']); 
 
+                                 /* ------------------------------------------ */
+
+        if($form->isSubmitted() && $form->isValid()) { 
+            
+            $querySearch = $form->get('query')->getData();
+            
+            if($form->has('title') && !ctype_space($querySearch) || !empty($querySearch)) {
+
+                $allArticle = $articleTagRepository->findAllArticlesByQuery($querySearch); 
+            } 
+        }
+
         // Récupère tous les articles avec une pagination
-        $articlesWithPagination = $paginator->paginate($allArticle, $request->query->getInt('page', 1), 25); 
+        $articlesWithPagination = $paginator->paginate($allArticle, $request->query->getInt('page', 1), 25);
 
                         /* ----------------------------------------------------------- */
 
         // Retourne la vue avec les paramètres associés //
         return $this->index('entities/article/index.html.twig',[
             
+            'form' => $form->createView(),
             'route' => 'article_list',
             'total' => $articlesWithPagination->getTotalItemCount(),
             'articles' => $articlesWithPagination
@@ -127,10 +146,11 @@ class ArticleController extends MainController {
      * @return Response Une vue associé 
      */ 
     #[Route('/yourArticles', name: 'articles_user')]
-    public function show(Request $request, PaginatorInterface $paginator): Response {
+    public function show(ArticleTagRepository $articleTagRepository, Request $request, PaginatorInterface $paginator): Response {
 
         /** @var ?UserInterface */      
         $user = $this->getUser(); // Récupère l'Utilisateur connecté
+        $form = $this->form($request, SearchFormType::class); // Récupère le formulaire de recherche
 
                         /* --------------------------------------- */
 
@@ -153,10 +173,23 @@ class ArticleController extends MainController {
 
             $userArticles = $user->getArticles(); // Stocke la liste des articles de l'utilisateur
 
+                            /* ------------------------------------- */
+            
+            if($form->isSubmitted() && $form->isValid()) { 
+                
+                $querySearch = $form->get('query')->getData();
+                
+                if($form->has('title') && !ctype_space($querySearch) || !empty($querySearch)) {
+
+                    $userArticles = $articleTagRepository->findAllArticlesByQuery($querySearch, $this->getUser()); 
+                } 
+            }
+                            /* ------------------------------------- */
+
             // Récupère tous les articles de l'utilisateur avec une pagination
             $articlesWithPagination = $paginator->paginate($userArticles, $request->query->getInt('page', 1), 25);
-            
-            // Récupère le nombe total de page
+
+            // Récupère le nombre de page totaux
             $total = $articlesWithPagination->getTotalItemCount();
         
         // Sinon, on récupère un message d'erreur
@@ -167,6 +200,7 @@ class ArticleController extends MainController {
         // Retourne la vue avec les paramètres associés //
         return $this->index('entities/article/userArticles.html.twig',[
             
+            'form' => $form->createView(),
             'route' => 'articles_user',
             'total' => $total,
             'articles' => $articlesWithPagination,
