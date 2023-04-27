@@ -147,6 +147,7 @@ class Article implements \Serializable {
     /**
      * Retourne tous les commentaires de l'article.
      * 
+     * 
      * @return Collection<int, Comment> Les commentaires associés à l'article
      */
     public function getComments(): Collection { return $this->comments; }
